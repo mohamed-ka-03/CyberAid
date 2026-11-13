@@ -1,6 +1,7 @@
 import { Ear, Compass, FolderLock, Send, ListChecks, Building2, UserRound, GraduationCap, MessageCircleHeart } from 'lucide-react'
 import type { ProfileConfig } from './types'
 import { LINE_112, LINE_3018, LINE_3020 } from './helpLines'
+import { parentScenarios } from './scenarios'
 import { capitalize, placeText, sentences, sinceText } from '../lib/text'
 
 export const parentProfile: ProfileConfig = {
@@ -166,6 +167,19 @@ export const parentProfile: ProfileConfig = {
     },
   },
 
+  situations: {
+    eyebrow: 'Mises en situation',
+    title: 'Et vous, que feriez-vous ?',
+    intro: 'Des situations fréquentes, pour vous préparer à réagir. Chaque choix est expliqué, sans jugement. Rien n’est enregistré.',
+    scenarios: parentScenarios,
+  },
+
+  guides: {
+    eyebrow: 'Guides des applis',
+    title: 'Bloquer, signaler, protéger le compte',
+    intro: 'Les réglages essentiels des applis les plus utilisées par les ados, à parcourir avec votre enfant plutôt qu’à sa place.',
+  },
+
   missions: {
     eyebrow: 'Plan d’accompagnement',
     title: 'Vos 5 réflexes',
@@ -208,6 +222,7 @@ export const parentProfile: ProfileConfig = {
             summary: 'Ne pas intervenir directement en ligne ni auprès de l’auteur.',
             why: 'Une confrontation peut aggraver la situation pour votre enfant. Passez par l’établissement et les canaux officiels.',
             steps: ['Ne pas répondre aux messages', 'Ne pas contacter l’auteur ou sa famille directement', 'Signaler les contenus sur la plateforme'],
+            guide: true,
             feedback: 'Vous protégez votre enfant en évitant l’escalade.',
           },
           {
@@ -254,6 +269,7 @@ export const parentProfile: ProfileConfig = {
             summary: 'Le signalement sur les plateformes est anonyme.',
             why: 'Les plateformes peuvent supprimer les contenus et suspendre les comptes.',
             steps: ['Repérer le bouton « Signaler » ensemble', 'Choisir le motif « Harcèlement »', 'En cas de contenu grave : 3018 ou internet-signalement.gouv.fr'],
+            guide: true,
             feedback: 'Le contenu est signalé. La plateforme doit maintenant l’examiner.',
           },
           {
@@ -364,7 +380,7 @@ export const parentProfile: ProfileConfig = {
   helpLines: [LINE_3018, LINE_3020, LINE_112],
 
   labels: {
-    nav: { home: 'Accueil', checkup: 'Check-up', missions: 'Réflexes', message: 'Message', profile: 'Espace' },
+    nav: { home: 'Accueil', checkup: 'Check-up', missions: 'Réflexes', message: 'Message', profile: 'Espace', situations: 'Situations', guides: 'Guides applis' },
     quickExit: 'Quitter vite',
     continue: 'Continuer',
     back: 'Retour',

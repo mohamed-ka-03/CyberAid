@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useRef } from 'react'
 import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import { AppProvider, useApp } from './state/AppState'
 import { ToastProvider } from './components/ui/Toast'
+import { BreatheProvider } from './components/breathe/Breathe'
 import { BottomNavigation, Sidebar, TopBar } from './components/layout/Navigation'
 import { ScreenSkeleton } from './components/ui/misc'
 import { useRoute, type Route } from './lib/router'
@@ -14,6 +15,8 @@ const screens: Record<Route, React.LazyExoticComponent<() => React.JSX.Element>>
   missions: lazy(() => import('./screens/Missions')),
   message: lazy(() => import('./screens/Message')),
   profil: lazy(() => import('./screens/Profile')),
+  situations: lazy(() => import('./screens/Situations')),
+  guides: lazy(() => import('./screens/Guides')),
 }
 
 const titles: Record<Route, string> = {
@@ -22,6 +25,8 @@ const titles: Record<Route, string> = {
   missions: 'Missions',
   message: 'Message d’aide',
   profil: 'Profil',
+  situations: 'Mises en situation',
+  guides: 'Guides des applis',
 }
 
 function Shell() {
@@ -82,7 +87,9 @@ export default function App() {
     <MotionConfig reducedMotion="user">
       <AppProvider>
         <ToastProvider>
-          <Shell />
+          <BreatheProvider>
+            <Shell />
+          </BreatheProvider>
         </ToastProvider>
       </AppProvider>
     </MotionConfig>

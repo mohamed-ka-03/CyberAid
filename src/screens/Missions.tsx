@@ -195,6 +195,10 @@ export default function Missions() {
         progress={open ? ps.missions[open.id] : undefined}
         address={config.address}
         onToggleStep={(i) => open && dispatch({ type: 'step', id: open.id, index: i, total: open.steps.length })}
+        onGuide={() => {
+          setOpenId(null)
+          navigate('guides')
+        }}
         onSetStatus={(s) => open && setStatus(open.id, s, open.steps.length)}
         onNext={(() => {
           const n = openIndex >= 0 ? nextAfter(openIndex) : undefined

@@ -1,6 +1,7 @@
 import { Footprints, Wind, FolderLock, Send, HeartHandshake, GraduationCap, Stethoscope, Waves } from 'lucide-react'
 import type { ProfileConfig } from './types'
 import { LINE_112, LINE_119, LINE_3018 } from './helpLines'
+import { youngScenarios } from './scenarios'
 import { capitalize, placeText, sentences, sinceText } from '../lib/text'
 
 export const youngProfile: ProfileConfig = {
@@ -172,6 +173,19 @@ export const youngProfile: ProfileConfig = {
     },
   },
 
+  situations: {
+    eyebrow: 'Mises en situation',
+    title: 'Et toi, tu ferais quoi ?',
+    intro: 'Des situations inspirées de la vraie vie. Choisis ta réaction et découvre ce qui pourrait se passer. Il n’y a pas de note, et rien n’est enregistré.',
+    scenarios: youngScenarios,
+  },
+
+  guides: {
+    eyebrow: 'Guides des applis',
+    title: 'Bloquer, signaler, se protéger',
+    intro: 'Choisis ton appli : on te montre où appuyer, étape par étape. Pense à faire tes captures avant de bloquer.',
+  },
+
   missions: {
     eyebrow: 'Kit de réflexes',
     title: 'Tes 5 missions',
@@ -218,6 +232,7 @@ export const youngProfile: ProfileConfig = {
             summary: 'Protège-toi directement dans l’appli.',
             why: 'Bloquer coupe le contact, signaler alerte la plateforme. La personne n’est pas prévenue.',
             steps: ['Fais tes captures avant de bloquer', 'Utilise « Signaler » sur le message ou le profil', 'Bloque le compte si tu le souhaites'],
+            guide: true,
             feedback: 'Tu as posé une limite. Tu pourras toujours la retirer dans les réglages de l’appli.',
           },
           {
@@ -269,6 +284,7 @@ export const youngProfile: ProfileConfig = {
             summary: 'Le signalement est anonyme.',
             why: 'Les plateformes peuvent supprimer les contenus et suspendre les comptes. Personne ne saura que c’est toi.',
             steps: ['Appuie sur « Signaler » sur le message ou la publication', 'Choisis « Harcèlement »', 'Tu peux aussi signaler au 3018'],
+            guide: true,
             feedback: 'Signalé. C’est maintenant à la plateforme d’agir.',
           },
           {
@@ -370,7 +386,7 @@ export const youngProfile: ProfileConfig = {
   helpLines: [LINE_3018, LINE_119, LINE_112],
 
   labels: {
-    nav: { home: 'Accueil', checkup: 'Check-up', missions: 'Missions', message: 'Message', profile: 'Moi' },
+    nav: { home: 'Accueil', checkup: 'Check-up', missions: 'Missions', message: 'Message', profile: 'Moi', situations: 'Situations', guides: 'Guides applis' },
     quickExit: 'Quitter vite',
     continue: 'Continuer',
     back: 'Retour',

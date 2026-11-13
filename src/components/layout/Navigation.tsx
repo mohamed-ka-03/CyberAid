@@ -1,4 +1,4 @@
-import { House, ClipboardCheck, Waypoints, MessageSquareText, UserRound, X, Phone } from 'lucide-react'
+import { House, ClipboardCheck, Waypoints, MessageSquareText, UserRound, X, Phone, Drama, BookOpen } from 'lucide-react'
 import { motion } from 'motion/react'
 import type { LucideIcon } from 'lucide-react'
 import { useApp, useProgress } from '../../state/AppState'
@@ -8,6 +8,7 @@ import { Logo } from '../art/Signal'
 import { SegmentedControl } from '../ui/SegmentedControl'
 import { useToast } from '../ui/Toast'
 import type { ProfileId } from '../../data/types'
+import { BreatheButton } from '../breathe/Breathe'
 
 type NavKey = 'home' | 'checkup' | 'missions' | 'message' | 'profile'
 const items: { key: NavKey; route: Route; icon: LucideIcon }[] = [
@@ -16,6 +17,12 @@ const items: { key: NavKey; route: Route; icon: LucideIcon }[] = [
   { key: 'missions', route: 'missions', icon: Waypoints },
   { key: 'message', route: 'message', icon: MessageSquareText },
   { key: 'profile', route: 'profil', icon: UserRound },
+]
+
+/** Outils complémentaires : barre latérale + accueil (la barre basse reste à 5 entrées). */
+const tools: { key: 'situations' | 'guides'; route: Route; icon: LucideIcon }[] = [
+  { key: 'situations', route: 'situations', icon: Drama },
+  { key: 'guides', route: 'guides', icon: BookOpen },
 ]
 
 /* ---------- ProfileSwitcher --------------------------------------------- */
@@ -78,6 +85,7 @@ export function TopBar() {
         </button>
         <div className="ml-auto flex min-w-0 items-center gap-0.5 xs:gap-1">
           <ProfileSwitcher />
+          <BreatheButton />
           <QuickExitButton />
         </div>
       </div>
@@ -136,7 +144,7 @@ export function Sidebar({ route }: { route: Route }) {
   const line = config.helpLines[0]
   return (
     <aside
-      className="fixed inset-y-0 left-0 z-30 hidden w-[var(--rail-w)] flex-col border-r border-line bg-surface md:top-16 md:flex lg:top-0 lg:w-[var(--sidebar-w)]"
+      className="fixed inset-y-0 left-0 z-30 hidden w-[var(--rail-w)] flex-col overflow-y-auto overscroll-contain border-r border-line bg-surface md:top-16 md:flex lg:top-0 lg:w-[var(--sidebar-w)]"
       aria-label="Barre latérale"
     >
       <div className="hidden px-6 pt-7 pb-6 lg:block">
@@ -150,37 +158,22 @@ export function Sidebar({ route }: { route: Route }) {
 
       <nav aria-label="Navigation principale" className="px-2 pt-3 lg:px-4 lg:pt-0">
         <ul className="space-y-1">
-          {items.map(({ key, route: r, icon: Icon }) => {
-            const active = r === route
-            return (
-              <li key={key}>
-                <a
-                  href={`#/${r}`}
-                  aria-current={active ? 'page' : undefined}
-                  className={cn(
-                    'group relative flex flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-[0.6875rem] font-semibold transition-colors',
-                    'lg:h-12 lg:flex-row lg:gap-3 lg:px-3.5 lg:py-0 lg:text-[0.9375rem]',
-                    active ? 'bg-accent-soft text-accent-text' : 'text-muted hover:bg-sunken hover:text-fg',
-                  )}
-                >
-                  {active && (
-                    <motion.span
-                      layoutId="side-active"
-                      className="absolute top-1/2 left-0 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-accent lg:-left-4"
-                      transition={{ type: 'spring', stiffness: 500, damping: 40 }}
-                    />
-                  )}
-                  <Icon className="size-5" strokeWidth={active ? 2.3 : 1.9} aria-hidden />
-                  <span>{config.labels.nav[key]}</span>
-                  {key === 'missions' && (
-                    <span className="ml-auto hidden text-xs font-semibold tabular-nums text-muted lg:inline">
-                      {current.done}/{current.total}
-                    </span>
-                  )}
-                </a>
-              </li>
-            )
-          })}
+          {items.map(({ key, route: r, icon }) => (
+            <SideLink key={key} route={r} icon={icon} label={config.labels.nav[key]} active={r === route}>
+              {key === 'missions' && (
+                <span className="ml-auto hidden text-xs font-semibold tabular-nums text-muted lg:inline">
+                  {current.done}/{current.total}
+                </span>
+              )}
+            </SideLink>
+          ))}
+        </ul>
+        <p className="eyebrow mt-6 mb-2 hidden px-3.5 lg:block">Outils</p>
+        <div className="mx-auto my-3 h-px w-8 bg-line lg:hidden" aria-hidden />
+        <ul className="space-y-1">
+          {tools.map(({ key, route: r, icon }) => (
+            <SideLink key={key} route={r} icon={icon} label={config.labels.nav[key]} active={r === route} />
+          ))}
         </ul>
       </nav>
 
@@ -195,8 +188,36 @@ export function Sidebar({ route }: { route: Route }) {
           <span className="mt-1.5 block font-display text-2xl text-fg">{line.number}</span>
           <span className="block text-[0.8125rem] leading-snug text-muted">Gratuit, anonyme · {line.hours.split('·')[1]?.trim() ?? line.hours}</span>
         </a>
+        <BreatheButton variant="side" />
         <QuickExitButton variant="side" />
       </div>
     </aside>
+  )
+}
+
+function SideLink({ route, icon: Icon, label, active, children }: { route: Route; icon: LucideIcon; label: string; active: boolean; children?: React.ReactNode }) {
+  return (
+    <li>
+      <a
+        href={`#/${route}`}
+        aria-current={active ? 'page' : undefined}
+        className={cn(
+          'group relative flex flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-center text-[0.6875rem] font-semibold transition-colors',
+          'lg:h-12 lg:flex-row lg:gap-3 lg:px-3.5 lg:py-0 lg:text-left lg:text-[0.9375rem]',
+          active ? 'bg-accent-soft text-accent-text' : 'text-muted hover:bg-sunken hover:text-fg',
+        )}
+      >
+        {active && (
+          <motion.span
+            layoutId="side-active"
+            className="absolute top-1/2 left-0 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-accent lg:-left-4"
+            transition={{ type: 'spring', stiffness: 500, damping: 40 }}
+          />
+        )}
+        <Icon className="size-5 shrink-0" strokeWidth={active ? 2.3 : 1.9} aria-hidden />
+        <span className="leading-tight">{label}</span>
+        {children}
+      </a>
+    </li>
   )
 }

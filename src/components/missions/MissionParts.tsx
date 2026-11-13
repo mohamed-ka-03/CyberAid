@@ -1,4 +1,4 @@
-import { Check, ChevronRight, TriangleAlert, CircleCheck, RotateCcw } from 'lucide-react'
+import { Check, ChevronRight, TriangleAlert, CircleCheck, RotateCcw, BookOpen } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import type { Mission } from '../../data/types'
 import type { MissionProgress } from '../../state/AppState'
@@ -149,9 +149,11 @@ interface SheetProps {
   onToggleStep: (i: number) => void
   onSetStatus: (s: MissionProgress['status']) => void
   onNext?: () => void
+  /** Ouvre les guides par plateforme (missions « bloquer / signaler »). */
+  onGuide?: () => void
 }
 
-export function MissionSheet({ open, onClose, mission, index, total, progress = EMPTY, address, onToggleStep, onSetStatus, onNext }: SheetProps) {
+export function MissionSheet({ open, onClose, mission, index, total, progress = EMPTY, address, onToggleStep, onSetStatus, onNext, onGuide }: SheetProps) {
   if (!mission) return null
   const tu = address === 'tu'
   const done = progress.status === 'done'
@@ -231,6 +233,23 @@ export function MissionSheet({ open, onClose, mission, index, total, progress = 
             {tu ? 'Coche ce qui t’aide à suivre. Tu peux tout décocher à tout moment.' : 'Cochez pour garder le fil. Tout est réversible.'}
           </p>
         </fieldset>
+
+        {mission.guide && onGuide && (
+          <button
+            type="button"
+            onClick={onGuide}
+            className="group flex w-full items-center gap-3 rounded-xl border border-accent-line bg-accent-soft/50 p-3.5 text-left transition-colors hover:border-accent"
+          >
+            <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-accent text-accent-fg">
+              <BookOpen className="size-4" aria-hidden />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[0.9375rem] font-semibold text-fg">{tu ? 'Où appuyer dans ton appli ?' : 'Où trouver ces options ?'}</span>
+              <span className="block text-[0.8125rem] text-muted">Instagram, Snapchat, TikTok, Discord, WhatsApp, Roblox</span>
+            </span>
+            <ChevronRight className="size-4 shrink-0 text-muted transition-transform group-hover:translate-x-0.5" aria-hidden />
+          </button>
+        )}
 
         {mission.caution && (
           <div className="flex gap-3 rounded-xl border border-warning/40 bg-warning-soft p-3.5">

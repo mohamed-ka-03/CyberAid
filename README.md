@@ -61,6 +61,9 @@ npm run preview   # sert le build sur http://localhost:4173
 | **Missions**    | 5 réflexes par situation (visé·e / témoin), sous-étapes à cocher, états *À faire / En cours / Fait*, annulation possible, progression « signal ». |
 | **Message**     | Message d’aide adapté au destinataire et au contexte, éditable, copiable, partageable. **Aucun envoi automatique.**                              |
 | **Profil**      | Progression, badges liés à des actions positives, thème clair/sombre/auto, rappels, confidentialité et effacement des données, ressources.         |
+| **Situations**  | Mises en situation interactives (4 côté Jeune, 3 côté Parent) : on choisit une réaction, on voit ce qui risque de se passer, on peut comparer, puis un bilan « Ce qu’on retient ». Aucun choix enregistré. |
+| **Guides applis** | Bloquer, signaler et protéger son compte pas à pas sur Instagram, Snapchat, TikTok, Discord, WhatsApp et Roblox, avec lien vers l’aide officielle. Accessible depuis les missions « bloquer / signaler ». |
+| **Souffler**    | Disponible depuis tous les écrans : respiration guidée (4 s / 6 s, 1 à 3 min) et ancrage 5-4-3-2-1, puis « Comment tu te sens ? » qui oriente vers le 3018 si besoin. Rien n’est enregistré. |
 
 **Transversal :** bascule instantanée Jeune / Parent (la progression est conservée et isolée par profil), bouton **« Quitter vite »**, thème sombre dédié, animations respectant `prefers-reduced-motion`, navigation clavier complète, visée WCAG 2.2 AA.
 
@@ -89,6 +92,8 @@ src/
 │   ├── types.ts
 │   ├── young.ts              YoungProfile : textes, questions, missions, modèles de messages, badges
 │   ├── parent.ts             ParentProfile
+│   ├── scenarios.ts          Mises en situation (Jeune / Parent)
+│   ├── platforms.ts          Guides par plateforme
 │   └── helpLines.ts          Numéros d’aide (3018, 119, 3020, 112)
 ├── state/AppState.tsx        État global : progression isolée par profil, thème, persistance minimale
 ├── lib/                      Routeur (hash), stockage, copie, sortie rapide, helpers de texte
@@ -96,10 +101,11 @@ src/
 │   ├── ui/                   Button, SegmentedControl, Modal, Toast, Badge, Switch, EmptyState, ContactCard, ThemeSelector…
 │   ├── layout/               TopBar, BottomNavigation, Sidebar, ProfileSwitcher, QuickExit
 │   ├── art/                  Logo, SignalArcs (progression), illustrations abstraites
+│   ├── breathe/              « J’ai besoin de souffler » : respiration guidée, ancrage 5-4-3-2-1
 │   ├── checkup/              QuestionOption
 │   ├── missions/             MissionItem, MissionCard, MissionSheet
 │   └── message/              MessagePreview
-└── screens/                  Home, Checkup, Missions, Message, Profile (chargés à la demande)
+└── screens/                  Home, Checkup, Missions, Message, Profile, Situations, Guides (chargés à la demande)
 ```
 
 Les deux parcours partagent les mêmes composants : tout ce qui change (contenu, questions, missions, messages, badges) vient de `src/data/young.ts` et `src/data/parent.ts`, et la couleur d’accent vient de l’attribut `data-profile`.
@@ -118,7 +124,8 @@ Version de démonstration :
 
 - pas de backend ni de compte ;
 - les rappels sont simulés (aucune notification n’est programmée) ;
-- les horaires des numéros d’aide sont indicatifs et doivent être vérifiés avant une mise en production.
+- les horaires des numéros d’aide sont indicatifs et doivent être vérifiés avant une mise en production ;
+- les noms de menus des guides par plateforme évoluent avec les mises à jour des applis : à relire avant une mise en production.
 
 ## Captures
 

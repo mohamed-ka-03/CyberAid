@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
-import { ArrowRight, ChevronRight, Lightbulb, Lock } from 'lucide-react'
+import { ArrowRight, BookOpen, ChevronRight, Drama, Lightbulb, Lock, Wind } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { useApp, useProgress } from '../state/AppState'
 import { navigate } from '../lib/router'
 import type { Entry, LearnSheet } from '../data/types'
@@ -9,6 +10,7 @@ import { HelpLineCard, HelpStrip, Squiggle } from '../components/ui/shared'
 import { Card } from '../components/ui/misc'
 import { Button } from '../components/ui/Button'
 import { Modal } from '../components/ui/Modal'
+import { useBreathe } from '../components/breathe/Breathe'
 
 export default function Home() {
   const { config, dispatch, ps } = useApp()
@@ -102,6 +104,8 @@ export default function Home() {
         <div className="mt-6 lg:hidden">
           <HelpStrip line={line} label={tu ? `Besoin de parler ? Appelle le ${line.number}` : `Besoin de conseils ? Le ${line.number}`} />
         </div>
+
+        <Toolbox />
 
         {/* Promesse + fonctionnement */}
         <section className="relative mt-10 overflow-hidden rounded-[1.75rem] bg-ink p-6 text-ink-fg md:p-8" aria-labelledby="promise">
@@ -200,5 +204,59 @@ export default function Home() {
         </ol>
       </Modal>
     </div>
+  )
+}
+
+/* ---------- Boîte à outils : accès aux outils depuis tous les écrans ------- */
+function Toolbox() {
+  const { config } = useApp()
+  const breathe = useBreathe()
+  const tu = config.address === 'tu'
+  const tools: { icon: LucideIcon; title: string; text: string; onClick: () => void }[] = [
+    {
+      icon: Drama,
+      title: tu ? 'Et toi, tu ferais quoi ?' : 'Mises en situation',
+      text: tu ? 'Des situations à jouer pour t’entraîner' : 'S’entraîner à réagir, sans jugement',
+      onClick: () => navigate('situations'),
+    },
+    {
+      icon: BookOpen,
+      title: 'Guides des applis',
+      text: tu ? 'Bloquer, signaler, protéger ton compte' : 'Bloquer, signaler, protéger le compte',
+      onClick: () => navigate('guides'),
+    },
+    {
+      icon: Wind,
+      title: tu ? 'J’ai besoin de souffler' : 'Prendre une pause',
+      text: tu ? 'Respirer et se poser, en 1 minute' : 'Respiration guidée, en 1 minute',
+      onClick: breathe,
+    },
+  ]
+  return (
+    <section className="mt-10" aria-labelledby="toolbox">
+      <h2 id="toolbox" className="eyebrow mb-3">
+        Boîte à outils
+      </h2>
+      <ul className="grid gap-3 sm:grid-cols-3">
+        {tools.map(({ icon: Icon, title, text, onClick }) => (
+          <li key={title}>
+            <button
+              type="button"
+              onClick={onClick}
+              className="group flex h-full w-full items-center gap-3.5 rounded-[1.375rem] border border-line bg-surface p-4 text-left transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-accent-line sm:flex-col sm:items-start"
+            >
+              <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-accent-soft text-accent-text">
+                <Icon className="size-5" aria-hidden />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block leading-snug font-semibold text-fg">{title}</span>
+                <span className="mt-0.5 block text-[0.8125rem] leading-snug text-muted">{text}</span>
+              </span>
+              <ChevronRight className="size-4 shrink-0 text-faint transition-transform group-hover:translate-x-0.5 sm:hidden" aria-hidden />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }

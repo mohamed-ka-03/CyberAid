@@ -63,6 +63,8 @@ export interface Mission {
   /** Feedback calme une fois la mission faite. */
   feedback: string
   caution?: string
+  /** Affiche un raccourci vers les guides par plateforme. */
+  guide?: boolean
 }
 
 export interface MessageOptions {
@@ -94,6 +96,64 @@ export interface ProgressSnapshot {
   done: string[]
   messageCopied: boolean
   tracksComplete: number
+}
+
+/* ---------- Mises en situation ------------------------------------------ */
+
+/** Jamais un « score » : un repère pour réfléchir, présenté avec texte + icône. */
+export type ChoiceTone = 'good' | 'mixed' | 'risky'
+
+export interface ScenarioChoice {
+  id: string
+  label: string
+  tone: ChoiceTone
+  /** Ce qui risque de se passer ensuite. */
+  outcome: string
+}
+
+export interface ChatLine {
+  from: string
+  text: string
+  /** Réaction ou compteur affiché sous la bulle (ex. « 😂 12 »). */
+  meta?: string
+}
+
+export interface ScenarioStep {
+  narration: string
+  chat?: ChatLine[]
+  question: string
+  choices: ScenarioChoice[]
+}
+
+export interface Scenario {
+  id: string
+  title: string
+  summary: string
+  /** Où ça se passe : groupe de classe, jeu en ligne, à la maison… */
+  place: string
+  icon: LucideIcon
+  steps: ScenarioStep[]
+  takeaways: string[]
+  next: { label: string; to: 'missions' | 'guides' | 'message'; track?: MissionTrack }
+  /** Sujet sensible : les numéros d’aide sont mis en avant à la fin. */
+  sensitive?: boolean
+}
+
+/* ---------- Guides par plateforme ---------------------------------------- */
+
+export interface GuideSection {
+  kind: 'block' | 'report' | 'protect'
+  steps: string[]
+}
+
+export interface PlatformGuide {
+  id: string
+  name: string
+  /** Ce que la plateforme est, en quelques mots. */
+  kind: string
+  sections: GuideSection[]
+  notes: string[]
+  help: string
 }
 
 /** Badges : uniquement liés à des actions positives, jamais à une révélation. */
@@ -128,6 +188,17 @@ export interface ProfileConfig {
     outcome: (answers: Record<string, string[]>, context: EntryContext | null) => CheckupOutcome
     disclaimer: string
   }
+  situations: {
+    eyebrow: string
+    title: string
+    intro: string
+    scenarios: Scenario[]
+  }
+  guides: {
+    eyebrow: string
+    title: string
+    intro: string
+  }
   missions: {
     eyebrow: string
     title: string
@@ -154,7 +225,7 @@ export interface ProfileConfig {
   }
   helpLines: HelpLine[]
   labels: {
-    nav: { home: string; checkup: string; missions: string; message: string; profile: string }
+    nav: { home: string; checkup: string; missions: string; message: string; profile: string; situations: string; guides: string }
     quickExit: string
     continue: string
     back: string
